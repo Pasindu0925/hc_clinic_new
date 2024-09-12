@@ -11,7 +11,7 @@ if (!isset($_SESSION['doctor_name'])) {
 $doctor_username = $_SESSION['doctor_name']; // Get doctor username from session
 
 // Fetch the doctor's name from the doctors table using the username
-$doctor_query = "SELECT name FROM doctors WHERE username = '$doctor_username'";
+$doctor_query = "SELECT name FROM doctors WHERE username = '[''$doctor_username'']'";
 $doctor_result = mysqli_query($conn, $doctor_query);
 
 // Check if the doctor exists in the doctors table
@@ -19,7 +19,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
     $doctor_row = mysqli_fetch_assoc($doctor_result);
     $doctor_name = $doctor_row['name']; // Get the doctor's name
 } else {
-    echo "Doctor not found $doctor_name $doctor_username.";
+    echo "Doctor not found for username: $doctor_username.";
     exit();
 }
 
@@ -112,7 +112,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
             </thead>
             <tbody>
             <?php
-            // SQL query to get appointments for the logged-in doctor using the doctor's name
+            // SQL query to get appointments for the logged-in doctor
             $sql = "SELECT app_id, p_id, doc_name, date, time
                     FROM appointments
                     WHERE doc_name = '$doctor_name'"; // Match by doctor's name
@@ -140,7 +140,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                     </tr>';
                 }
             } else {
-                echo "<tr><td colspan='6'>No appointments found for $doctor_name $doc_name.</td></tr>";
+                echo "<tr><td colspan='6'>No appointments found for $doctor_name.</td></tr>";
             }
             ?>
             </tbody>

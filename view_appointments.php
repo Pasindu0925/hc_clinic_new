@@ -2,13 +2,27 @@
 include 'connect.php';
 session_start(); // Start the session
 
-// Ensure the doctor is logged in and retrieve their name
+// Ensure the doctor is logged in and retrieve their username
 if (!isset($_SESSION['doctor_name'])) {
     header("Location: login.php"); // Redirect to login if not logged in
     exit();
 }
 
-$doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
+$doctor_username = $_SESSION['doctor_name']; // Get doctor username from session
+
+// Fetch the doctor's name from the doctors table using the username
+$doctor_query = "SELECT name FROM doctors WHERE username = '$doctor_username'";
+$doctor_result = mysqli_query($conn, $doctor_query);
+
+// Check if the doctor exists in the doctors table
+if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
+    $doctor_row = mysqli_fetch_assoc($doctor_result);
+    $doctor_name = $doctor_row['name']; // Get the doctor's name
+} else {
+    echo "Doctor not found.";
+    exit();
+}
+
 ?>
 
 <!doctype html>
@@ -98,7 +112,7 @@ $doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
             </thead>
             <tbody>
             <?php
-            // SQL query to get appointments for the logged-in doctor
+            // SQL query to get appointments for the logged-in doctor using the doctor's name
             $sql = "SELECT app_id, p_id, doc_name, date, time
                     FROM appointments
                     WHERE doc_name = '$doctor_name'"; // Match by doctor's name
@@ -114,14 +128,14 @@ $doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
 
                     echo '
                     <tr>
-                        <td>' . htmlspecialchars($app_id) . '</td>
-                        <td>' . htmlspecialchars($p_id) . '</td>
-                        <td>' . htmlspecialchars($doc_name) . '</td>
-                        <td>' . htmlspecialchars($date) . '</td>
-                        <td>' . htmlspecialchars($time) . '</td>
+                        <td>' . $app_id . '</td>
+                        <td>' . $p_id . '</td>
+                        <td>' . $doc_name . '</td>
+                        <td>' . $date . '</td>
+                        <td>' . $time . '</td>
                         <td>
-                            <a href="update_appointment.php?id=' . urlencode($app_id) . '&status=Complete">Complete</a> 
-                            <a href="update_appointment.php?id=' . urlencode($app_id) . '&status=Ongoing">Ongoing</a>
+                            <a href="update_appointment.php?id=' . $app_id . '&status=Complete">Complete</a> 
+                            <a href="update_appointment.php?id=' . $app_id . '&status=Ongoing">Ongoing</a>
                         </td>
                     </tr>';
                 }

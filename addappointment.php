@@ -49,14 +49,25 @@
 
 <div class="container">
     <div class="register-container">
-        <h2><i class="fas fa-user-plus"></i> Add an appointment </h2>
+        <h2><i class="fas fa-user-plus"></i> Add an Appointment </h2>
         <form action="addappointment.php" method="POST">
             <div class="form-group">
-                <label for="p_id"> Patient ID</label>
-                <input type="number" class="form-control" id="app_id" name="p_id" placeholder="Enter the Patient ID" required>
+                <label for="patient_name">Select Patient</label>
+                <select class="form-control" id="patient_name" name="patient_name" required>
+                    <?php
+                    include 'connect.php';
+                    $sql = "SELECT name FROM patients";
+                    $result = mysqli_query($conn, $sql);
+                    if ($result) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+                        }
+                    }
+                    ?>
+                </select>
             </div>
             <div class="form-group">
-                <label for="doc_name"> Select Your Doctor</label>
+                <label for="doc_name">Select Your Doctor</label>
                 <select class="form-control" id="doc_name" name="doc_name" required>
                     <option value="Dr.Chandana Nawaratne">Dr.Chandana Nawaratne</option>
                     <option value="Dr.Ranil Wickramasinghe">Dr.Ranil Wickramasinghe</option>
@@ -74,18 +85,18 @@
                 <input type="time" class="form-control" id="time" name="time" placeholder="Time" required>
             </div>
             
-            <center> <input type="submit" value="Add Appointments"></center>
+            <center><input type="submit" value="Add Appointment" class="btn btn-custom"></center>
         </form>
 
         <?php
         include 'connect.php';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $p_id = $_POST['p_id'];
+            $patient_name = $_POST['patient_name'];
             $doc_name = $_POST['doc_name'];
             $date = $_POST['date'];
             $time = $_POST['time'];
 
-            $sql = "INSERT INTO appointments(p_id, doc_name, date, time) VALUES ('$p_id', '$doc_name', '$date', '$time')";
+            $sql = "INSERT INTO appointments(patient_name, doc_name, date, time) VALUES ('$patient_name', '$doc_name', '$date', '$time')";
 
             $run = mysqli_query($conn, $sql);
 

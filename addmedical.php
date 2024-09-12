@@ -2,12 +2,12 @@
 include 'connect.php';
 
 if (isset($_POST['submit'])) {
-    $p_id = $_POST['p_id'];
+    $patient_name = $_POST['patient_name'];
     $diagnosis = $_POST['diagnosis'];
     $treatment = $_POST['treatment'];
 
     // Insert the new medical record into the database
-    $sql = "INSERT INTO medical_info (p_id, diagnosis, treatment) VALUES ('$p_id', '$diagnosis', '$treatment')";
+    $sql = "INSERT INTO medical_info (patient_name, diagnosis, treatment) VALUES ('$patient_name', '$diagnosis', '$treatment')";
     $run = mysqli_query($conn, $sql);
 
     if ($run) {
@@ -72,15 +72,15 @@ if (isset($_POST['submit'])) {
         <h2><i class="fas fa-notes-medical"></i> Add Medical Information</h2>
         <form action="addmedical.php" method="POST">
             <div class="form-group">
-                <label for="p_id">Select Patient</label>
-                <select class="form-control" id="p_id" name="p_id" required>
+                <label for="patient_name">Select Patient</label>
+                <select class="form-control" id="patient_name" name="patient_name" required>
                     <?php
                     // Fetch patients from the patients table
-                    $sql = "SELECT p_id, name FROM patients";
+                    $sql = "SELECT name FROM patients";
                     $result = mysqli_query($conn, $sql);
                     if ($result) {
                         while ($row = mysqli_fetch_assoc($result)) {
-                            echo '<option value="' . $row['p_id'] . '">' . $row['name'] . '</option>';
+                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
                         }
                     }
                     ?>

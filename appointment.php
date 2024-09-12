@@ -12,6 +12,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid black;
@@ -49,9 +50,8 @@
             border-radius: 5px;
         }
     </style>
-</head>
+  </head>
   <body>
-      
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -67,19 +67,24 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="receptionisthome.php">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addappointment.php">Add Appointment</a>
+                </li>
             </ul>
         </div>
     </nav>
-    
-    <center>
-        <table>
+
+    <div class="container mt-4">
+        <h2 class="text-center">View Appointments</h2>
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Appointment ID</th>
-                    <th>Patient ID</th>
+                    <th>Patient Name</th>
                     <th>Doctor Name</th>
                     <th>Date</th>
                     <th>Time</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -87,33 +92,40 @@
             <?php
             include 'connect.php';
 
-            $sql = "SELECT * FROM appointments";
+            // Fetch appointments along with patient names
+            $sql = "SELECT a.app_id, p.name as patient_name, a.doc_name, a.date, a.time, a.status 
+                    FROM appointments a 
+                    JOIN patients p ON a.p_id = p.p_id";
             $result = mysqli_query($conn, $sql);
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $app_id = $row['app_id'];
-                    $p_id = $row['p_id'];
+                    $patient_name = $row['patient_name'];
                     $doc_name = $row['doc_name'];
                     $date = $row['date'];
                     $time = $row['time'];
+                    $status = $row['status'];
 
                     echo '
                     <tr>
                         <td>' . $app_id . '</td>
-                        <td>' . $p_id . '</td>
+                        <td>' . $patient_name . '</td>
                         <td>' . $doc_name . '</td>
                         <td>' . $date . '</td>
                         <td>' . $time . '</td>
+                        <td>' . $status . '</td>
                         <td>
-                            <a href="r_update.php?app_id=' . $app_id . '">Update</a>
+                            <a href="r_update.php?app_id=' . $app_id . '" class="btn btn-warning btn-sm">Update</a>
+                            <a href="delete_appointment.php?app_id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }
+            } else {
+                echo '<tr><td colspan="7" class="text-center">No appointments found</td></tr>';
             }
             ?>
             </tbody>
         </table>
-    </center>
-
-</body>
+    </div>
+  </body>
 </html>

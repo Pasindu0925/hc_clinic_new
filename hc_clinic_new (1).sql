@@ -161,3 +161,27 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+
+
+
+Error
+SQL query: Copy
+
+
+-- Table structure for `patients`
+CREATE TABLE `patients` (
+  `p_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `dob` date NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `phone_number` int(11) NOT NULL,
+  `med_history` text NOT NULL,
+  `insurance_details` text NOT NULL,
+  PRIMARY KEY (`p_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+MySQL said: Documentation
+
+#1050 - Table 'patients' already exists

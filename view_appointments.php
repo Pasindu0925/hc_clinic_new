@@ -2,19 +2,14 @@
 include 'connect.php';
 session_start(); // Start the session
 
-// Ensure the doctor is logged in and retrieve their ID
-if (!isset($_SESSION['doctor_id'])) {
+// Ensure the doctor is logged in and retrieve their name
+if (!isset($_SESSION['doctor_name'])) {
     header("Location: login.php"); // Redirect to login if not logged in
     exit();
 }
 
-$doctor_id = $_SESSION['doctor_id']; // Get doctor ID from session
+$doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
 
-// Fetch doctor's name based on their ID to use in the query
-$doctor_name_query = "SELECT name FROM doctors WHERE doc_id = '$doctor_id'";
-$doctor_name_result = mysqli_query($conn, $doctor_name_query);
-$doctor_name_row = mysqli_fetch_assoc($doctor_name_result);
-$doctor_name = $doctor_name_row['name']; // Fetch the doctor's name
 ?>
 
 <!doctype html>
@@ -74,7 +69,7 @@ $doctor_name = $doctor_name_row['name']; // Fetch the doctor's name
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-zMpOr0vL9TzNu1jzG+p4AqkBdhavRrWIe0iDlEu5KQ/xNUolGpP0xKqRk9b1nx+3" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBkHfh6EXrWjFl5W8A7VvZOJ3BCsw2P0ndKv6ikHi" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
@@ -99,36 +94,32 @@ $doctor_name = $doctor_name_row['name']; // Fetch the doctor's name
                     <th>Doctor Name</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Status</th>
                     <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
             <?php
             // SQL query to get appointments for the logged-in doctor
-            $sql = "SELECT a.app_id, a.p_id, d.name as doctor_name, a.date, a.time, a.status
-                    FROM appointments a
-                    JOIN doctors d ON a.doc_name = d.name
-                    WHERE a.doc_name = '$doctor_name'"; // Match by doctor's name
+            $sql = "SELECT app_id, p_id, doc_name, date, time
+                    FROM appointments
+                    WHERE doc_name = '$doctor_name'"; // Match by doctor's name
 
             $result = mysqli_query($conn, $sql);
-            if ($result) {
+            if ($result && mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $app_id = $row['app_id'];
                     $p_id = $row['p_id'];
-                    $doctor_name = $row['doctor_name'];
+                    $doc_name = $row['doc_name'];
                     $date = $row['date'];
                     $time = $row['time'];
-                    $status = $row['status'];
 
                     echo '
                     <tr>
                         <td>' . $app_id . '</td>
                         <td>' . $p_id . '</td>
-                        <td>' . $doctor_name . '</td>
+                        <td>' . $doc_name . '</td>
                         <td>' . $date . '</td>
                         <td>' . $time . '</td>
-                        <td>' . $status . '</td>
                         <td>
                             <a href="update_appointment.php?id=' . $app_id . '&status=Complete">Complete</a> 
                             <a href="update_appointment.php?id=' . $app_id . '&status=Ongoing">Ongoing</a>
@@ -136,7 +127,7 @@ $doctor_name = $doctor_name_row['name']; // Fetch the doctor's name
                     </tr>';
                 }
             } else {
-                echo "<tr><td colspan='7'>No appointments found.</td></tr>";
+                echo "<tr><td colspan='6'>No appointments found for $doctor_name.</td></tr>";
             }
             ?>
             </tbody>

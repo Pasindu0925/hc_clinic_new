@@ -88,8 +88,14 @@ session_start(); // Start the session
 
                     // Check if the role is a doctor
                     if ($role == 3) {
-                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
-                        $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                        // Get the doctor's name from the `doctors` table
+                        $doctorQuery = "SELECT * FROM doctors WHERE username='$username'";
+                        $doctorResult = mysqli_query($conn, $doctorQuery);
+                        if ($doctorResult && mysqli_num_rows($doctorResult) == 1) {
+                            $doctorRow = mysqli_fetch_assoc($doctorResult);
+                            $_SESSION['doctor_id'] = $doctorRow['doc_id']; // Store doctor ID
+                            $_SESSION['doctor_name'] = $doctorRow['name']; // Store doctor name
+                        }
                     }
 
                     // Redirect based on role

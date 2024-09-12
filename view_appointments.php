@@ -9,7 +9,6 @@ if (!isset($_SESSION['doctor_name'])) {
 }
 
 $doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
-
 ?>
 
 <!doctype html>
@@ -115,14 +114,14 @@ $doctor_name = $_SESSION['doctor_name']; // Get doctor name from session
 
                     echo '
                     <tr>
-                        <td>' . $app_id . '</td>
-                        <td>' . $p_id . '</td>
-                        <td>' . $doc_name . '</td>
-                        <td>' . $date . '</td>
-                        <td>' . $time . '</td>
+                        <td>' . htmlspecialchars($app_id) . '</td>
+                        <td>' . htmlspecialchars($p_id) . '</td>
+                        <td>' . htmlspecialchars($doc_name) . '</td>
+                        <td>' . htmlspecialchars($date) . '</td>
+                        <td>' . htmlspecialchars($time) . '</td>
                         <td>
-                            <a href="update_appointment.php?id=' . $app_id . '&status=Complete">Complete</a> 
-                            <a href="update_appointment.php?id=' . $app_id . '&status=Ongoing">Ongoing</a>
+                            <a href="update_appointment.php?id=' . urlencode($app_id) . '&status=Complete">Complete</a> 
+                            <a href="update_appointment.php?id=' . urlencode($app_id) . '&status=Ongoing">Ongoing</a>
                         </td>
                     </tr>';
                 }

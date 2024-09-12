@@ -19,7 +19,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
     $doctor_row = mysqli_fetch_assoc($doctor_result);
     $doctor_name = $doctor_row['name']; // Get the doctor's name
 } else {
-    echo "Doctor not found.";
+    echo "Doctor not found $doctor_name $doctor_username.";
     exit();
 }
 
@@ -140,7 +140,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                     </tr>';
                 }
             } else {
-                echo "<tr><td colspan='6'>No appointments found for $doctor_name.</td></tr>";
+                echo "<tr><td colspan='6'>No appointments found for $doctor_name $doc_name.</td></tr>";
             }
             ?>
             </tbody>

@@ -1,17 +1,11 @@
 <?php
 include 'connect.php';
-session_start(); // Start the session
+session_start();
 
-// Ensure the doctor is logged in and retrieve their username
-if (!isset($_SESSION['doctor_name'])) {
-    header("Location: login.php"); // Redirect to login if not logged in
-    exit();
-}
-
-$doctor_username = $_SESSION['doctor_name']; // Get doctor username from session
+$doctor_username = trim($_SESSION['doctor_name']); // Get doctor username from session
 
 // Fetch the doctor's name from the doctors table using the username
-$doctor_query = "SELECT name FROM doctors WHERE username = '[''$doctor_username'']'";
+$doctor_query = "SELECT name FROM doctors WHERE username = '$doctor_username'";
 $doctor_result = mysqli_query($conn, $doctor_query);
 
 // Check if the doctor exists in the doctors table
@@ -20,6 +14,15 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
     $doctor_name = $doctor_row['name']; // Get the doctor's name
 } else {
     echo "Doctor not found for username: $doctor_username.";
+    exit();
+}
+
+// Mark an appointment as completed if requested
+if (isset($_GET['complete_id'])) {
+    $complete_id = intval($_GET['complete_id']);
+    $update_query = "UPDATE appointments SET status = 'Completed' WHERE app_id = $complete_id";
+    mysqli_query($conn, $update_query);
+    header("Location: view_appointments.php"); // Refresh the page
     exit();
 }
 
@@ -34,7 +37,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         table {
             width: 100%;
@@ -81,9 +84,9 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBkHfh6EXrWjFl5W8A7VvZOJ3BCsw2P0ndKv6ikHi" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
         <a class="navbar-brand" href="dochome.php">HC_Clinic</a>
@@ -107,16 +110,14 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                     <th>Doctor Name</th>
                     <th>Date</th>
                     <th>Time</th>
+                    <th>Status</th>
                     <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
             <?php
-            // SQL query to get appointments for the logged-in doctor
-            $sql = "SELECT app_id, p_id, doc_name, date, time
-                    FROM appointments
-                    WHERE doc_name = '$doctor_name'"; // Match by doctor's name
-
+            // SQL query to fetch appointments for the logged-in doctor
+            $sql = "SELECT * FROM appointments WHERE doc_name = '$doctor_name'";
             $result = mysqli_query($conn, $sql);
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
@@ -125,6 +126,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                     $doc_name = $row['doc_name'];
                     $date = $row['date'];
                     $time = $row['time'];
+                    $status = $row['status'];
 
                     echo '
                     <tr>
@@ -133,14 +135,20 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                         <td>' . $doc_name . '</td>
                         <td>' . $date . '</td>
                         <td>' . $time . '</td>
-                        <td>
-                            <a href="update_appointment.php?id=' . $app_id . '&status=Complete">Complete</a> 
-                            <a href="update_appointment.php?id=' . $app_id . '&status=Ongoing">Ongoing</a>
-                        </td>
+                        <td>' . $status . '</td>
+                        <td>';
+                    
+                    if ($status == 'Ongoing') {
+                        echo '<a href="view_appointments.php?complete_id=' . $app_id . '">Mark as Completed</a>';
+                    } else {
+                        echo 'Completed';
+                    }
+
+                    echo '</td>
                     </tr>';
                 }
             } else {
-                echo "<tr><td colspan='6'>No appointments found for $doctor_name.</td></tr>";
+                echo "<tr><td colspan='7'>No appointments found for $doctor_name.</td></tr>";
             }
             ?>
             </tbody>

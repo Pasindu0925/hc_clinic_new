@@ -1,54 +1,25 @@
--- Update the appointments table to store patient names instead of patient IDs
-ALTER TABLE `appointments`
-DROP FOREIGN KEY `fk_p_id`; -- Drop the foreign key constraint first
-
-ALTER TABLE `appointments`
-CHANGE COLUMN `p_id` `patient_name` VARCHAR(100) NOT NULL;
-
--- Remove the status column (if still present)
-ALTER TABLE `appointments`
-DROP COLUMN `status`;
-
--- Ensure patient names in patient_records are from appointments table
+-- Add the patient_name column to the patient_records table
 ALTER TABLE `patient_records`
 ADD COLUMN `patient_name` VARCHAR(100) NOT NULL AFTER `rec_id`;
 
+-- Update the patient_name column in patient_records from the appointments table
 UPDATE `patient_records` pr
-JOIN `appointments` a ON pr.p_id = a.p_id
-SET pr.patient_name = (SELECT name FROM `patients` WHERE `p_id` = a.p_id);
+JOIN `appointments` a ON pr.p_id = (SELECT p_id FROM patients WHERE patients.name = a.patient_name)
+SET pr.patient_name = a.patient_name;
 
-ALTER TABLE `patient_records`
-DROP FOREIGN KEY `fk_patient_records_p_id`;
-
+-- Drop the p_id column in patient_records since it's not needed anymore
 ALTER TABLE `patient_records`
 DROP COLUMN `p_id`;
 
--- Ensure patient names in medical_info are from patient_records table
+-- Add the patient_name column to the medical_info table
 ALTER TABLE `medical_info`
 ADD COLUMN `patient_name` VARCHAR(100) NOT NULL AFTER `med_id`;
 
+-- Update the patient_name column in medical_info from the patient_records table
 UPDATE `medical_info` mi
-JOIN `patient_records` pr ON mi.p_id = pr.p_id
+JOIN `patient_records` pr ON mi.p_id = (SELECT p_id FROM patients WHERE patients.name = pr.patient_name)
 SET mi.patient_name = pr.patient_name;
 
-ALTER TABLE `medical_info`
-DROP FOREIGN KEY `medical_info_ibfk_1`;
-
+-- Drop the p_id column in medical_info since it's not needed anymore
 ALTER TABLE `medical_info`
 DROP COLUMN `p_id`;
-
-
-
-
-
-
-Error
-SQL query: Copy Documentation
-
-
-UPDATE `patient_records` pr
-JOIN `appointments` a ON pr.p_id = a.p_id
-SET pr.patient_name = (SELECT name FROM `patients` WHERE `p_id` = a.p_id);
-MySQL said: Documentation
-
-#1054 - Unknown column 'a.p_id' in 'on clause'

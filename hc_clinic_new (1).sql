@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2024 at 07:45 PM
+-- Generation Time: Sep 12, 2024 at 10:43 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -32,15 +32,18 @@ CREATE TABLE `appointments` (
   `p_id` int(11) NOT NULL,
   `doc_name` varchar(50) NOT NULL,
   `date` date NOT NULL,
-  `time` time NOT NULL
+  `time` time NOT NULL,
+  `status` enum('Ongoing','Completed') NOT NULL DEFAULT 'Ongoing'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `appointments`
 --
 
-INSERT INTO `appointments` (`app_id`, `p_id`, `doc_name`, `date`, `time`) VALUES
-(1, 1, 'Dr.Ranil Wickramasinghe', '2024-09-09', '17:24:00');
+INSERT INTO `appointments` (`app_id`, `p_id`, `doc_name`, `date`, `time`, `status`) VALUES
+(1, 1, 'Dr.Ranil Wickramasinghe', '2024-09-09', '17:24:00', 'Ongoing'),
+(11, 2, 'Dr.Chandana Nawaratne', '2024-09-13', '00:14:00', 'Completed'),
+(12, 3, 'Dr.Chandana Nawaratne', '2024-09-24', '01:45:00', 'Ongoing');
 
 -- --------------------------------------------------------
 
@@ -59,11 +62,11 @@ CREATE TABLE `doctors` (
 --
 
 INSERT INTO `doctors` (`doc_id`, `username`, `name`) VALUES
-(1, '[d1@gmail.com]', '[Dr.Chandana Nawaratne]'),
-(2, '[d2@gmail.com]', '[Dr.Ranil Wickramasinghe]'),
-(3, '[d3@gmail.com]', '[Dr.Namal Rajapaksha]'),
-(4, '[d4@gmail.com]', '[Dr.Anura Kumara Dissanayake]'),
-(5, '[d5@gmail.com]', '[Dr.Sajith Premadasa]');
+(1, 'd1@gmail.com', 'Dr.Chandana Nawaratne'),
+(2, 'd2@gmail.com', 'Dr.Ranil Wickramasinghe'),
+(3, 'd3@gmail.com', 'Dr.Namal Rajapaksha'),
+(4, 'd4@gmail.com', 'Dr.Anura Kumara Dissanayake'),
+(5, 'd5@gmail.com', 'Dr.Sajith Premadasa');
 
 -- --------------------------------------------------------
 
@@ -83,7 +86,11 @@ CREATE TABLE `medical_info` (
 --
 
 INSERT INTO `medical_info` (`med_id`, `p_id`, `diagnosis`, `treatment`) VALUES
-(11, 2, 'PSDOKJG', 'ASPKJF');
+(11, 2, 'PSDOKJG', 'ASPKJF'),
+(13, 3, '', ''),
+(14, 4, '', ''),
+(15, 3, ';zxlvg', ';zdslmv'),
+(16, 5, 'yes', 'yes');
 
 -- --------------------------------------------------------
 
@@ -110,7 +117,8 @@ INSERT INTO `patients` (`p_id`, `username`, `name`, `dob`, `address`, `phone_num
 (1, 'pasindu@gmail.com', 'Pasindu Jayathunga', '2003-09-25', '38 Dematagolla, Ukuwela', 714563256, 'Hypertension, Type 2 Diabetes, Hyperlipidemia', 'Blue Cross Blue Shield'),
 (2, 'oshada@gmail.com', 'Oshada Herath', '2002-03-20', '38  Mulleriyawa Angoda', 715698563, 'Chronic Back Pain, Depression', 'Tricare'),
 (3, 'osanda@gmail.com', 'Osanda Bandara', '2018-06-05', '124/A Katugasthota Kandy', 775698325, 'Gestational Diabetes (Previous Pregnancy), Iron Deficiency Anemia', 'Anthem'),
-(4, 'sanuka@gmail.com', 'Sanuka Alles', '2024-09-09', '28 Thawalankoya Ukuwela', 714568792, 'Depression, Anxiety, Obesity', 'Cigna');
+(4, 'sanuka@gmail.com', 'Sanuka Alles', '2024-09-09', '28 Thawalankoya Ukuwela', 714568792, 'Depression, Anxiety, Obesity', 'Cigna'),
+(5, 'shehan@gmail.com', 'Shehan Herath', '2024-09-08', 'Ukuwela', 714569872, 'none', 'none');
 
 -- --------------------------------------------------------
 
@@ -131,7 +139,9 @@ CREATE TABLE `patient_records` (
 
 INSERT INTO `patient_records` (`rec_id`, `p_id`, `vitals`, `notes`) VALUES
 (6, 1, 'godaaaakkk', 'dem dem'),
-(7, 2, ',laskf', 'askjfv');
+(7, 2, ',laskf', 'askjfv'),
+(8, 1, 'sdlkgj', 'sdlkgf'),
+(9, 3, 'laskjnfc ', 'aslkjnf');
 
 -- --------------------------------------------------------
 
@@ -166,7 +176,8 @@ INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
 (16, 'pasindu@gmail.com', 'pat', '4'),
 (17, 'oshada@gmail.com', 'pat', '4'),
 (18, 'osanda@gmail.com', 'pat', '4'),
-(19, 'sanuka@gmail.com', 'pat', '4');
+(19, 'sanuka@gmail.com', 'pat', '4'),
+(20, 'shehan@gmail.com', 'pat', '4');
 
 --
 -- Indexes for dumped tables
@@ -219,7 +230,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `app_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `app_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `doctors`
@@ -231,25 +242,25 @@ ALTER TABLE `doctors`
 -- AUTO_INCREMENT for table `medical_info`
 --
 ALTER TABLE `medical_info`
-  MODIFY `med_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `med_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `patient_records`
 --
 ALTER TABLE `patient_records`
-  MODIFY `rec_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `rec_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables

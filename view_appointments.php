@@ -9,6 +9,12 @@ if (!isset($_SESSION['doctor_id'])) {
 }
 
 $doctor_id = $_SESSION['doctor_id']; // Get doctor ID from session
+
+// Fetch doctor's name based on their ID to use in the query
+$doctor_name_query = "SELECT name FROM doctors WHERE doc_id = '$doctor_id'";
+$doctor_name_result = mysqli_query($conn, $doctor_name_query);
+$doctor_name_row = mysqli_fetch_assoc($doctor_name_result);
+$doctor_name = $doctor_name_row['name']; // Fetch the doctor's name
 ?>
 
 <!doctype html>
@@ -103,7 +109,7 @@ $doctor_id = $_SESSION['doctor_id']; // Get doctor ID from session
             $sql = "SELECT a.app_id, a.p_id, d.name as doctor_name, a.date, a.time, a.status
                     FROM appointments a
                     JOIN doctors d ON a.doc_name = d.name
-                    WHERE d.doc_id = '$doctor_id'";
+                    WHERE a.doc_name = '$doctor_name'"; // Match by doctor's name
 
             $result = mysqli_query($conn, $sql);
             if ($result) {
@@ -113,7 +119,7 @@ $doctor_id = $_SESSION['doctor_id']; // Get doctor ID from session
                     $doctor_name = $row['doctor_name'];
                     $date = $row['date'];
                     $time = $row['time'];
-                    $status = $row['status']; // Status column needs to be added to appointments table
+                    $status = $row['status'];
 
                     echo '
                     <tr>

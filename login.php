@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,6 +81,17 @@
 
                 // Verify the password (without hashing)
                 if ($password === $row['password']) {
+                    // Store user information in session
+                    $_SESSION['user_id'] = $row['id']; // User ID
+                    $_SESSION['username'] = $row['username']; // Username
+                    $_SESSION['role'] = $row['role']; // User Role
+
+                    // Check if the role is a doctor
+                    if ($role == 3) {
+                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
+                        $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                    }
+
                     // Redirect based on role
                     switch ($role) {
                         case 1:

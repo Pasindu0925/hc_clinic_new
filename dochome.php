@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Nurse's home</title>
+    <title>Doctor's home</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -49,10 +49,10 @@
                 <a class="nav-link" href="dochome.php">Home</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">Add Medical Information</a>
+                <a class="nav-link" href="addmedical.php">Add Medical Information</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">View and Edit Medical Information</a>
+                <a class="nav-link" href="medinfo.php">View and Edit Medical Information</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="#">View Upcoming Appointments</a>

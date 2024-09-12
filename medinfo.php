@@ -1,7 +1,11 @@
+<?php
+include 'connect.php';
+?>
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>View Appointments</title>
+<head>
+    <title>Medical Info and Patient Records</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -50,22 +54,22 @@
         }
     </style>
 </head>
-  <body>
+<body>
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6Hty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
-        <a class="navbar-brand" href="receptionisthome.php">HC_Clinic</a>
+        <a class="navbar-brand" href="dochome.php">HC_Clinic</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
             aria-expanded="false" aria-label="Toggle navigation"></button>
         <div class="collapse navbar-collapse" id="collapsibleNavId">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link" href="receptionisthome.php">Home</a>
+                    <a class="nav-link" href="dochome.php">Home</a>
                 </li>
             </ul>
         </div>
@@ -75,40 +79,50 @@
         <table>
             <thead>
                 <tr>
-                    <th>Appointment ID</th>
+                    <th>Medical Info ID</th>
                     <th>Patient ID</th>
-                    <th>Doctor Name</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Actions</th>
+                    <th>Vitals</th>
+                    <th>Notes</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
             <?php
-            include 'connect.php';
-
-            $sql = "SELECT * FROM appointments";
+            // SQL query to join medical_info and patient_records tables
+            $sql = "SELECT mi.med_id, mi.p_id, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
+                    FROM medical_info mi
+                    LEFT JOIN patient_records pr ON mi.p_id = pr.p_id";  // Assuming the foreign key in patient_records is p_id
+            
             $result = mysqli_query($conn, $sql);
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $app_id = $row['app_id'];
+                    $med_id = $row['med_id'];
                     $p_id = $row['p_id'];
-                    $doc_name = $row['doc_name'];
-                    $date = $row['date'];
-                    $time = $row['time'];
+                    $vitals = $row['vitals'];
+                    $notes = $row['notes'];
+                    $diagnosis = $row['diagnosis'];
+                    $treatment = $row['treatment'];
+                    
 
                     echo '
                     <tr>
-                        <td>' . $app_id . '</td>
+                        <td>' . $med_id . '</td>
                         <td>' . $p_id . '</td>
-                        <td>' . $doc_name . '</td>
-                        <td>' . $date . '</td>
-                        <td>' . $time . '</td>
+                        <td>' . $vitals . '</td>
+                        <td>' . $notes . '</td>
+                        <td>' . $diagnosis . '</td>
+                        <td>' . $treatment . '</td>
+                        
                         <td>
-                            <a href="r_update.php?app_id=' . $app_id . '">Update</a>
+                            <a href="d_update.php?id=' . $med_id . '">Update</a> 
+                            <a href="d_delete.php?id=' . $med_id . '">Delete</a>
                         </td>
                     </tr>';
                 }
+            } else {
+                echo "<tr><td colspan='7'>No records found.</td></tr>";
             }
             ?>
             </tbody>

@@ -48,8 +48,12 @@
         <li class="nav-item active">
                 <a class="nav-link" href="nursehome.php">Home</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="patientsrecords.php">Patients Records</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add Patients Record</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownId">
+                    <a class="dropdown-item" href="addpatientrecord.php">Add Patient Record</a>
+                    <a class="dropdown-item" href="patientsrecords.php">View Patients Records</a>
+                </div>
             </li>
             <li class="logout">
                     <a class="nav-link" href="logout.php">Logout</a>

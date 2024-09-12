@@ -36,3 +36,19 @@ DROP FOREIGN KEY `medical_info_ibfk_1`;
 
 ALTER TABLE `medical_info`
 DROP COLUMN `p_id`;
+
+
+
+
+
+
+Error
+SQL query: Copy Documentation
+
+
+UPDATE `patient_records` pr
+JOIN `appointments` a ON pr.p_id = a.p_id
+SET pr.patient_name = (SELECT name FROM `patients` WHERE `p_id` = a.p_id);
+MySQL said: Documentation
+
+#1054 - Unknown column 'a.p_id' in 'on clause'

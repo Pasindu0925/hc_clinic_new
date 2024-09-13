@@ -1,18 +1,47 @@
+<?php
+include 'connect.php';
+session_start();
+
+$doctor_username = trim($_SESSION['doctor_name']); // Get doctor username from session
+
+// Fetch the doctor's name from the doctors table using the username
+$doctor_query = "SELECT name FROM doctors WHERE username = '$doctor_username'";
+$doctor_result = mysqli_query($conn, $doctor_query);
+
+// Check if the doctor exists in the doctors table
+if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
+    $doctor_row = mysqli_fetch_assoc($doctor_result);
+    $doctor_name = $doctor_row['name']; // Get the doctor's name
+} else {
+    echo "Doctor not found for username: $doctor_username.";
+    exit();
+}
+
+// Mark an appointment as completed if requested
+if (isset($_GET['complete_id'])) {
+    $complete_id = intval($_GET['complete_id']);
+    $update_query = "UPDATE appointments SET status = 'Completed' WHERE app_id = $complete_id";
+    mysqli_query($conn, $update_query);
+    header("Location: view_appointments.php"); // Refresh the page
+    exit();
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <title>View Appointments</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
         th, td {
             border: 1px solid black;
@@ -50,57 +79,50 @@
             border-radius: 5px;
         }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+      
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
-        <a class="navbar-brand" href="receptionisthome.php">HC_Clinic</a>
+        <a class="navbar-brand" href="dochome.php">HC_Clinic</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
             aria-expanded="false" aria-label="Toggle navigation"></button>
         <div class="collapse navbar-collapse" id="collapsibleNavId">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link" href="receptionisthome.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="addappointment.php">Add Appointment</a>
+                    <a class="nav-link" href="dochome.php">Home</a>
                 </li>
             </ul>
         </div>
     </nav>
-
-    <div class="container mt-4">
-        <h2 class="text-center">View Appointments</h2>
-        <table class="table table-striped">
+    
+    <center>
+        <table>
             <thead>
                 <tr>
                     <th>Appointment ID</th>
-                    <th>Patient Name</th>
+                    <th>Patient ID</th>
                     <th>Doctor Name</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
             <?php
-            include 'connect.php';
-
-            // Fetch appointments along with patient names
-            $sql = "SELECT a.app_id, p.name as patient_name, a.doc_name, a.date, a.time, a.status 
-                    FROM appointments a 
-                    JOIN patients p ON a.p_id = p.p_id";
+            // SQL query to fetch appointments for the logged-in doctor
+            $sql = "SELECT * FROM appointments WHERE doc_name = '$doctor_name'";
             $result = mysqli_query($conn, $sql);
-            if ($result) {
+            if ($result && mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $app_id = $row['app_id'];
-                    $patient_name = $row['patient_name'];
+                    $p_id = $row['p_id'];
                     $doc_name = $row['doc_name'];
                     $date = $row['date'];
                     $time = $row['time'];
@@ -109,23 +131,29 @@
                     echo '
                     <tr>
                         <td>' . $app_id . '</td>
-                        <td>' . $patient_name . '</td>
+                        <td>' . $p_id . '</td>
                         <td>' . $doc_name . '</td>
                         <td>' . $date . '</td>
                         <td>' . $time . '</td>
                         <td>' . $status . '</td>
-                        <td>
-                            <a href="r_update.php?app_id=' . $app_id . '" class="btn btn-warning btn-sm">Update</a>
-                            <a href="delete_appointment.php?app_id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+                        <td>';
+                    
+                    if ($status == 'Ongoing') {
+                        echo '<a href="view_appointments.php?complete_id=' . $app_id . '">Mark as Completed</a>';
+                    } else {
+                        echo 'Completed';
+                    }
+
+                    echo '</td>
                     </tr>';
                 }
             } else {
-                echo '<tr><td colspan="7" class="text-center">No appointments found</td></tr>';
+                echo "<tr><td colspan='7'>No appointments found for $doctor_name.</td></tr>";
             }
             ?>
             </tbody>
         </table>
-    </div>
-  </body>
+    </center>
+
+</body>
 </html>

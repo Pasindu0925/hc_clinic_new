@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +60,7 @@
                     <option value="5">Admin</option>
                 </select>
             </div>
-            <center><input type="submit" value="Login"></center>
+            <center><input type="submit" value="Login" class="btn btn-custom"></center>
         </form>
 
         <?php
@@ -64,19 +68,30 @@
         include 'connect.php';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $role = $_POST['role'];
+            $username = mysqli_real_escape_string($conn, $_POST['username']);
+            $password = mysqli_real_escape_string($conn, $_POST['password']);
+            $role = mysqli_real_escape_string($conn, $_POST['role']);
 
             // Query the users table for the provided username and role
             $sql = "SELECT * FROM user WHERE username='$username' AND role='$role'";
             $result = mysqli_query($conn, $sql);
 
-            if (mysqli_num_rows($result) == 1) {
+            if ($result && mysqli_num_rows($result) == 1) {
                 $row = mysqli_fetch_assoc($result);
 
                 // Verify the password (without hashing)
                 if ($password === $row['password']) {
+                    // Store user information in session
+                    $_SESSION['user_id'] = $row['id']; // User ID
+                    $_SESSION['username'] = $row['username']; // Username
+                    $_SESSION['role'] = $row['role']; // User Role
+
+                    // Check if the role is a doctor
+                    if ($role == 3) {
+                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
+                        $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                    }
+
                     // Redirect based on role
                     switch ($role) {
                         case 1:

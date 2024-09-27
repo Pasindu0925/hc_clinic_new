@@ -58,9 +58,9 @@ include 'connect.php';
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6Hty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
         <a class="navbar-brand" href="dochome.php">HC_Clinic</a>
@@ -76,11 +76,11 @@ include 'connect.php';
     </nav>
     
     <center>
-        <table>
+        <table class="table table-striped mt-4">
             <thead>
                 <tr>
                     <th>Medical Info ID</th>
-                    <th>Patient ID</th>
+                    <th>Patient Name</th>
                     <th>Vitals</th>
                     <th>Notes</th>
                     <th>Diagnosis</th>
@@ -90,34 +90,32 @@ include 'connect.php';
             </thead>
             <tbody>
             <?php
-            // SQL query to join medical_info and patient_records tables
-            $sql = "SELECT mi.med_id, mi.p_id, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
+            // SQL query to join medical_info and patient_records tables using patient_name
+            $sql = "SELECT mi.med_id, mi.patient_name, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
                     FROM medical_info mi
-                    LEFT JOIN patient_records pr ON mi.p_id = pr.p_id";  // Assuming the foreign key in patient_records is p_id
-            
+                    LEFT JOIN patient_records pr ON mi.patient_name = pr.patient_name";  // Using patient_name as the foreign key
+
             $result = mysqli_query($conn, $sql);
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $med_id = $row['med_id'];
-                    $p_id = $row['p_id'];
+                    $patient_name = $row['patient_name'];
                     $vitals = $row['vitals'];
                     $notes = $row['notes'];
                     $diagnosis = $row['diagnosis'];
                     $treatment = $row['treatment'];
-                    
 
                     echo '
                     <tr>
                         <td>' . $med_id . '</td>
-                        <td>' . $p_id . '</td>
+                        <td>' . $patient_name . '</td>
                         <td>' . $vitals . '</td>
                         <td>' . $notes . '</td>
                         <td>' . $diagnosis . '</td>
                         <td>' . $treatment . '</td>
-                        
                         <td>
-                            <a href="d_update.php?id=' . $med_id . '">Update</a> 
-                            <a href="d_delete.php?id=' . $med_id . '">Delete</a>
+                            <a href="d_update.php?id=' . $med_id . '" class="btn btn-warning btn-sm">Update</a> 
+                            <a href="d_delete.php?id=' . $med_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }

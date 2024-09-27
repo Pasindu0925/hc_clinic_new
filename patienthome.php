@@ -56,7 +56,7 @@
                     </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">My Appointments</a>
+                    <a class="nav-link" href="myappointments.php">My Appointments</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Edit My Profile</a>

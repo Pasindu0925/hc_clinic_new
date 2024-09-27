@@ -2,6 +2,12 @@
 include 'connect.php';
 session_start();
 
+// Check if the logged-in user's role is a patient
+if ($_SESSION['role'] != 4) {
+    echo "Access denied. You are not authorized to view this page.";
+    exit();
+}
+
 // Assuming the logged-in patient's username is stored in the session
 $patient_username = trim($_SESSION['patient_username']);
 

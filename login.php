@@ -86,10 +86,11 @@ session_start(); // Start the session
                     $_SESSION['username'] = $row['username']; // Username
                     $_SESSION['role'] = $row['role']; // User Role
 
-                    // Check if the role is a doctor
+                    // Set additional session variables based on role
                     if ($role == 3) {
-                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
                         $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                    } elseif ($role == 4) { // If the role is a patient
+                        $_SESSION['patient_username'] = $row['username']; // Store patient username for session
                     }
 
                     // Redirect based on role

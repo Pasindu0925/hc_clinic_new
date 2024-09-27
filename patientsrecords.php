@@ -12,6 +12,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid black;
@@ -72,46 +73,51 @@
     </nav>
     
     <center>
-        <table>
-            <thead>
-                <tr>
-                    <th>Record ID</th>
-                    <th>Patient ID</th>
-                    <th>Vitals</th>
-                    <th>Notes</th>
-                    <th>Action</th> 
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            include 'connect.php';
-
-            $sql = "SELECT * FROM patient_records";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $rec_id = $row['rec_id'];
-                    $p_id = $row['p_id'];
-                    $vitals = $row['vitals'];
-                    $notes = $row['notes'];
-
-                    echo '
+        <div class="container mt-4">
+            <h2 class="text-center">Patients Records</h2>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>' . $rec_id . '</td>
-                        <td>' . $p_id . '</td>
-                        <td>' . $vitals . '</td>
-                        <td>' . $notes . '</td>
-                        <td>
-                            <a href="n_update.php?rec_id=' . $rec_id . '">Update</a> 
-                        </td>
-                    </tr>';
+                        <th>Record ID</th>
+                        <th>Patient Name</th>
+                        <th>Vitals</th>
+                        <th>Notes</th>
+                        <th>Action</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                include 'connect.php';
+
+                // Fetch all patient records with patient names
+                $sql = "SELECT * FROM patient_records";
+                $result = mysqli_query($conn, $sql);
+                if ($result) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $rec_id = $row['rec_id'];
+                        $patient_name = $row['patient_name'];  // Changed to patient_name
+                        $vitals = $row['vitals'];
+                        $notes = $row['notes'];
+
+                        echo '
+                        <tr>
+                            <td>' . $rec_id . '</td>
+                            <td>' . $patient_name . '</td> <!-- Display patient_name -->
+                            <td>' . $vitals . '</td>
+                            <td>' . $notes . '</td>
+                            <td>
+                                <a href="n_update.php?rec_id=' . $rec_id . '" class="btn btn-warning btn-sm">Update</a>
+                            </td>
+                        </tr>';
+                    }
+                } else {
+                    echo '<tr><td colspan="5" class="text-center">No patient records found</td></tr>';
                 }
-            }
-            ?>
-            </tbody>
-        </table>
+                ?>
+                </tbody>
+            </table>
+        </div>
     </center>
 
 </body>
 </html>
-

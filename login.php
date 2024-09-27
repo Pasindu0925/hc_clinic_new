@@ -202,8 +202,7 @@ session_start(); // Start the session
             }
             ?>
             <div class="login-footer">
-                <p>Need an account? <a href="register.php">Sign up</a></p>
-                <p><a href="forgot_password.php">Forgot Password?</a></p>
+                <p>Need an account? <a href="adminpage.php">Sign up</a></p>
             </div>
         </div>
     </div>

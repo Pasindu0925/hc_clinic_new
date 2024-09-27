@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
 
     if ($run_medical_info) {
         $_SESSION['message'] = "Updated medical information for patient: $patient_name (Appointment ID: $app_id)";
-        header("Location: medical_records.php");  // Redirect to the records page after successful update
+        header("Location: medinfo.php");  // Redirect to the records page after successful update
         exit();
     } else {
         echo "Please check your query.";

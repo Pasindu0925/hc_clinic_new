@@ -74,7 +74,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
     </nav>
 
     <div class="container mt-5">
-        <h3 class="text-center">Medical Info and Patient Records for Dr. <?php echo $doctor_name; ?></h3>
+        <h3 class="text-center">Medical Info and Patient Records for <?php echo $doctor_name; ?></h3>
         <table class="table table-striped mt-4">
             <thead>
                 <tr>
@@ -116,7 +116,6 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                         <td>' . $treatment . '</td>
                         <td>
                             <a href="d_update.php?app_id=' . $app_id . '&patient_name=' . urlencode($patient_name) . '" class="btn btn-warning btn-sm">Update</a> 
-                            <a href="d_delete.php?app_id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }

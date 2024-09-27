@@ -59,7 +59,7 @@
                     <a class="nav-link" href="myappointments.php">My Appointments</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Edit My Profile</a>
+                    <a class="nav-link" href="editprofile.php">Edit My Profile</a>
                 </li>
                 <li class="logout">
                     <a class="nav-link" href="logout.php">Logout</a>

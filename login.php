@@ -12,27 +12,79 @@ session_start(); // Start the session
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-image: url('https://images.unsplash.com/photo-1581092795360-206bd9dfb179?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGhlYWx0aHxlbnwwfHx8fDE2MjcyNjc5NzI&ixlib=rb-1.2.1&q=80&w=1080');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
         }
         .login-container {
-            max-width: 400px;
-            margin: 80px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
         .login-container h2 {
-            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 30px;
-            color: #343a40;
+            color: #007bff;
+        }
+        .form-control {
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-control:focus {
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+            border: 1px solid #007bff;
         }
         .btn-custom {
             background-color: #007bff;
             color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 123, 255, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
         .btn-custom:hover {
             background-color: #0056b3;
+            box-shadow: 0 12px 20px rgba(0, 123, 255, 0.5);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+        }
+        .login-container i {
+            color: #007bff;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .login-container p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .login-container p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-container p a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -40,7 +92,7 @@ session_start(); // Start the session
 
 <div class="container">
     <div class="login-container">
-        <h2><i class="fas fa-sign-in-alt"></i> Login </h2>
+        <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
         <form action="login.php" method="POST">
             <div class="form-group">
                 <label for="username"><i class="fas fa-user"></i> Username</label>
@@ -60,8 +112,9 @@ session_start(); // Start the session
                     <option value="5">Admin</option>
                 </select>
             </div>
-            <center><input type="submit" value="Login" class="btn btn-custom"></center>
+            <input type="submit" value="Login" class="btn btn-custom">
         </form>
+        <p>Need an account? <a href="register.php">Register here</a></p>
 
         <?php
         // Include database connection

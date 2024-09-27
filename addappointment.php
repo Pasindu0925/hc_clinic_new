@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Appointments</title>
+    <title>Add Appointment</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .register-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #343a40;
         }
-        th {
-            background-color: #f2f2f2;
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .navbar {
-            margin-bottom: 20px;
+        .btn-custom:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -45,57 +48,66 @@
 </nav>
 
 <div class="container">
-    <center>
-        <table>
-            <thead>
-                <tr>
-                    <th>Appointment ID</th>
-                    <th>Patient Name</th>
-                    <th>Doctor Name</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            include 'connect.php';
+    <div class="register-container">
+        <h2><i class="fas fa-user-plus"></i> Add an Appointment </h2>
+        <form action="addappointment.php" method="POST">
+            <div class="form-group">
+                <label for="patient_name">Select Patient</label>
+                <select class="form-control" id="patient_name" name="patient_name" required>
+                    <?php
+                    include 'connect.php';
+                    $sql = "SELECT name FROM patients";
+                    $result = mysqli_query($conn, $sql);
+                    if ($result) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="doc_name">Select Your Doctor</label>
+                <select class="form-control" id="doc_name" name="doc_name" required>
+                    <option value="Dr.Chandana Nawaratne">Dr.Chandana Nawaratne</option>
+                    <option value="Dr.Ranil Wickramasinghe">Dr.Ranil Wickramasinghe</option>
+                    <option value="Dr.Namal Rajapaksha">Dr.Namal Rajapaksha</option>
+                    <option value="Dr.Anura Kumara Dissanayake">Dr.Anura Kumara Dissanayake</option>
+                    <option value="Dr.Sajith Premadasa">Dr.Sajith Premadasa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date"> Date</label>
+                <input type="date" class="form-control" id="date" name="date" placeholder="Date" required>
+            </div>
+            <div class="form-group">
+                <label for="time"> Time</label>
+                <input type="time" class="form-control" id="time" name="time" placeholder="Time" required>
+            </div>
+            
+            <center><input type="submit" value="Add Appointment" class="btn btn-custom"></center>
+        </form>
 
-            // Correct SQL to use patient_name
-            $sql = "SELECT a.app_id, a.patient_name, a.doc_name, a.date, a.time, a.status 
-                    FROM appointments a";  // Removed any erroneous join conditions
-            $result = mysqli_query($conn, $sql);
+        <?php
+        include 'connect.php';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $patient_name = $_POST['patient_name'];
+            $doc_name = $_POST['doc_name'];
+            $date = $_POST['date'];
+            $time = $_POST['time'];
 
-            if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $app_id = $row['app_id'];
-                    $patient_name = $row['patient_name'];
-                    $doc_name = $row['doc_name'];
-                    $date = $row['date'];
-                    $time = $row['time'];
-                    $status = $row['status'];
+            $sql = "INSERT INTO appointments(patient_name, doc_name, date, time) VALUES ('$patient_name', '$doc_name', '$date', '$time')";
 
-                    echo '
-                    <tr>
-                        <td>' . $app_id . '</td>
-                        <td>' . $patient_name . '</td>
-                        <td>' . $doc_name . '</td>
-                        <td>' . $date . '</td>
-                        <td>' . $time . '</td>
-                        <td>' . $status . '</td>
-                        <td>
-                            <a href="r_update.php?app_id=' . $app_id . '">Update</a>
-                        </td>
-                    </tr>';
-                }
+            $run = mysqli_query($conn, $sql);
+
+            if ($run) {
+                header("location:appointment.php");
             } else {
-                echo "<tr><td colspan='7'>No appointments found.</td></tr>";
+                echo "Please check your insert details";
             }
-            ?>
-            </tbody>
-        </table>
-    </center>
+        }
+        ?>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

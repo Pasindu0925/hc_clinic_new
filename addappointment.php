@@ -69,11 +69,15 @@
             <div class="form-group">
                 <label for="doc_name">Select Your Doctor</label>
                 <select class="form-control" id="doc_name" name="doc_name" required>
-                    <option value="Dr.Chandana Nawaratne">Dr.Chandana Nawaratne</option>
-                    <option value="Dr.Ranil Wickramasinghe">Dr.Ranil Wickramasinghe</option>
-                    <option value="Dr.Namal Rajapaksha">Dr.Namal Rajapaksha</option>
-                    <option value="Dr.Anura Kumara Dissanayake">Dr.Anura Kumara Dissanayake</option>
-                    <option value="Dr.Sajith Premadasa">Dr.Sajith Premadasa</option>
+                    <?php
+                    $sql = "SELECT name FROM doctors";
+                    $result = mysqli_query($conn, $sql);
+                    if ($result) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+                        }
+                    }
+                    ?>
                 </select>
             </div>
             <div class="form-group">

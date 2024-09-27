@@ -49,8 +49,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="patienthome.php">Home</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="myrecords.php">My Records</a>
+                <li class="nav-item active" id="my-records-link">
+                    <a class="nav-link" href="myrecords.php">
+                        <i class="fas fa-folder-open"></i> <!-- Optional icon if you want to use -->
+                        My Records
+                    </a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#">My Appointments</a>

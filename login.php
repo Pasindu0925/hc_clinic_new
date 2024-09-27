@@ -7,7 +7,7 @@ include 'connect.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home & Login</title>
+    <title>Login</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -41,7 +41,7 @@ include 'connect.php';
             color: white;
         }
         .login-container {
-            max-width: 500px;
+            max-width: 400px;
             margin: 80px auto;
             padding: 30px;
             background-color: #fff;
@@ -91,18 +91,37 @@ include 'connect.php';
         </form>
 
         <?php
+        // Include database connection
+        include 'connect.php';
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $username = mysqli_real_escape_string($conn, $_POST['username']);
             $password = mysqli_real_escape_string($conn, $_POST['password']);
             $role = mysqli_real_escape_string($conn, $_POST['role']);
 
+            // Query the users table for the provided username and role
             $sql = "SELECT * FROM user WHERE username='$username' AND role='$role'";
             $result = mysqli_query($conn, $sql);
 
             if ($result && mysqli_num_rows($result) == 1) {
                 $row = mysqli_fetch_assoc($result);
 
+                // Verify the password (without hashing)
                 if ($password === $row['password']) {
+                    // Store user information in session
+                    $_SESSION['user_id'] = $row['id']; // User ID
+                    $_SESSION['username'] = $row['username']; // Username
+                    $_SESSION['role'] = $row['role']; // User Role
+
+                    // Check if the role is a doctor
+                    if ($role == 3) {
+                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
+                        $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                    } elseif ($role == 4) { // If the role is a patient
+                        $_SESSION['patient_username'] = $row['username']; // Store patient username for session
+                    }
+
+                    // Redirect based on role
                     switch ($role) {
                         case 1:
                             header("Location: receptionisthome.php");
@@ -132,6 +151,7 @@ include 'connect.php';
             }
         }
         ?>
+
     </div>
 </div>
 

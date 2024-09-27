@@ -121,7 +121,6 @@
                         <td>' . $status . '</td>
                         <td>
                             <a href="r_update.php?app_id=' . $app_id . '" class="btn btn-warning btn-sm">Update</a>
-                            <a href="delete_appointment.php?app_id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }

@@ -163,7 +163,7 @@
         ?>
 
         <div class="text-center mt-3">
-            <p><a href="register.php" style="color: #ffffff;">Don't have an account? Register here.</a></p>
+            <p><a href="adminpage.php" style="color: #ffffff;">Don't have an account? Register here.</a></p>
         </div>
     </div>
 </div>

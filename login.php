@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,78 +10,100 @@
     <title>Login - HC_Clinic</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #4e54c8, #8f94fb);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #1e90ff, #00c9ff);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Roboto', sans-serif;
             color: #ffffff;
+            background-image: url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDIwfHxoZWFsdGh8ZW58MHx8fHwxNjMyMDAxNjc2&ixlib=rb-1.2.1&q=80&w=1080');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
         }
         .login-container {
-            width: 400px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+            max-width: 500px;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            padding: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .login-container:hover {
-            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        .login-container h2 {
-            font-size: 30px;
-            font-weight: 700;
-            margin-bottom: 30px;
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 35px;
             color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         .form-group label {
             font-weight: 500;
+            font-size: 16px;
             color: #ffffff;
-            margin-bottom: 10px;
         }
         .form-control {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             padding: 15px;
             color: #ffffff;
-            margin-bottom: 20px;
             border-radius: 30px;
+            margin-bottom: 20px;
+        }
+        .form-control::placeholder {
+            color: #ffffff;
         }
         .form-control:focus {
             background: rgba(255, 255, 255, 0.4);
+            border: none;
             outline: none;
-            box-shadow: none;
         }
         .btn-custom {
             background-color: #28a745;
-            color: #ffffff;
-            font-weight: 500;
-            padding: 15px;
-            width: 100%;
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
             border: none;
             border-radius: 30px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(40, 167, 69, 0.4);
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            width: 100%;
         }
         .btn-custom:hover {
             background-color: #218838;
-            box-shadow: 0 12px 20px rgba(40, 167, 69, 0.6);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        .btn-custom:focus {
+            outline: none;
         }
         .login-container i {
             margin-right: 10px;
-            color: #ffffff;
         }
-        .text-center p {
-            color: #ffffff;
+        .login-container p {
             font-size: 16px;
+            color: #ffffff;
+            margin-top: 20px;
+        }
+        .login-container a {
+            color: #00c9ff;
+            text-decoration: none;
+        }
+        .login-container a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -85,7 +111,7 @@
 
 <div class="container">
     <div class="login-container">
-        <h2 class="text-center"><i class="fas fa-sign-in-alt"></i> Login</h2>
+        <h2><i class="fas fa-sign-in-alt"></i> Login </h2>
         <form action="login.php" method="POST">
             <div class="form-group">
                 <label for="username"><i class="fas fa-user"></i> Username</label>
@@ -131,6 +157,14 @@
                     $_SESSION['username'] = $row['username']; // Username
                     $_SESSION['role'] = $row['role']; // User Role
 
+                    // Check if the role is a doctor
+                    if ($role == 3) {
+                        $_SESSION['doctor_id'] = $row['id']; // Store doctor ID
+                        $_SESSION['doctor_name'] = $row['username']; // Store doctor name (username here)
+                    } elseif ($role == 4) { // If the role is a patient
+                        $_SESSION['patient_username'] = $row['username']; // Store patient username for session
+                    }
+
                     // Redirect based on role
                     switch ($role) {
                         case 1:
@@ -163,7 +197,7 @@
         ?>
 
         <div class="text-center mt-3">
-            <p><a href="register.php" style="color: #ffffff;">Don't have an account? Register here.</a></p>
+            <p>Don't have an account? <a href="adminpage.php">Register here.</a></p>
         </div>
     </div>
 </div>

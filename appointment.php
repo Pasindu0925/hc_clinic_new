@@ -92,10 +92,8 @@
             <?php
             include 'connect.php';
 
-            // Fetch appointments along with patient names
-            $sql = "SELECT a.app_id, p.name as patient_name, a.doc_name, a.date, a.time, a.status 
-                    FROM appointments a 
-                    JOIN patients p ON a.p_id = p.p_id";
+            // Fetch appointments directly
+            $sql = "SELECT app_id, patient_name, doc_name, date, time, status FROM appointments";
             $result = mysqli_query($conn, $sql);
 
             // Check for errors in the SQL query execution

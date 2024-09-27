@@ -97,7 +97,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
         <table class="table table-striped mt-4">
             <thead>
                 <tr>
-                    <th>Medical Info ID</th>
+                    <th>Appointment ID</th>
                     <th>Patient Name</th>
                     <th>Vitals</th>
                     <th>Notes</th>
@@ -108,33 +108,34 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
             </thead>
             <tbody>
             <?php
-            // SQL query to join medical_info and patient_records tables using patient_name and filter by doctor name
-            $sql = "SELECT mi.med_id, mi.patient_name, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
-                    FROM medical_info mi
-                    LEFT JOIN patient_records pr ON mi.patient_name = pr.patient_name
-                    WHERE mi.patient_name IN (SELECT DISTINCT patient_name FROM appointments WHERE doc_name = '$doctor_name')"; // Filter patients by the logged-in doctor
+            // SQL query to join appointments, patient_records, and medical_info tables using patient_name and filter by doctor name
+            $sql = "SELECT a.app_id, a.patient_name, pr.vitals, pr.notes, mi.diagnosis, mi.treatment 
+                    FROM appointments a
+                    LEFT JOIN patient_records pr ON a.patient_name = pr.patient_name
+                    LEFT JOIN medical_info mi ON a.patient_name = mi.patient_name
+                    WHERE a.doc_name = '$doctor_name'"; // Filter appointments by the logged-in doctor
 
             $result = mysqli_query($conn, $sql);
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $med_id = $row['med_id'];
+                    $app_id = $row['app_id'];
                     $patient_name = $row['patient_name'];
-                    $vitals = $row['vitals'];
-                    $notes = $row['notes'];
-                    $diagnosis = $row['diagnosis'];
-                    $treatment = $row['treatment'];
+                    $vitals = isset($row['vitals']) ? $row['vitals'] : 'N/A';
+                    $notes = isset($row['notes']) ? $row['notes'] : 'N/A';
+                    $diagnosis = !empty($row['diagnosis']) ? $row['diagnosis'] : '';  // Leave empty for missing diagnosis
+                    $treatment = !empty($row['treatment']) ? $row['treatment'] : '';  // Leave empty for missing treatment
 
                     echo '
                     <tr>
-                        <td>' . $med_id . '</td>
+                        <td>' . $app_id . '</td>
                         <td>' . $patient_name . '</td>
                         <td>' . $vitals . '</td>
                         <td>' . $notes . '</td>
                         <td>' . $diagnosis . '</td>
                         <td>' . $treatment . '</td>
                         <td>
-                            <a href="d_update.php?id=' . $med_id . '" class="btn btn-warning btn-sm">Update</a> 
-                            <a href="d_delete.php?id=' . $med_id . '" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="d_update.php?id=' . $app_id . '" class="btn btn-warning btn-sm">Update</a> 
+                            <a href="d_delete.php?id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }

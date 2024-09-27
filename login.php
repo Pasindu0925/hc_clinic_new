@@ -197,7 +197,11 @@ session_start(); // Start the session
         ?>
 
         <div class="text-center mt-3">
+<<<<<<< HEAD
             <p>Don't have an account? <a href="adminpage.php">Register here.</a></p>
+=======
+            <p><a href="adminpage.php" style="color: #ffffff;">Don't have an account? Register here.</a></p>
+>>>>>>> 67563f3621022117d9b82dddcf92da47f78d9202
         </div>
     </div>
 </div>

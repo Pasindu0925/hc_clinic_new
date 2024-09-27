@@ -168,7 +168,7 @@
         <h1>Welcome to HC_Clinic</h1>
         <p>Your health and well-being are our top priority. Experience quality care and compassionate service.</p>
         <a href="login.php" class="btn btn-custom"><i class="fas fa-sign-in-alt"></i> Login</a>
-        <a href="register.php" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="adminpage.php" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Register</a>
     </div>
 </section>
 

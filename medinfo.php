@@ -46,25 +46,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
             background-color: #f9f9f9;
         }
 
-        .logout {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-        }
-
-        .logout .nav-link {
-            background-color: #dc3545; 
-            color: white;
-            padding: 8px 16px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .logout .nav-link:hover {
-            background-color: #c82333; 
-        }
-
-        .navbar-nav .nav-item:not(.logout) .nav-link:hover {
+        .navbar-nav .nav-item .nav-link:hover {
             background-color: #0056b3; 
             color: white;
             border-radius: 5px;
@@ -73,8 +55,7 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
 </head>
 <body>
       
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -91,9 +72,9 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
             </ul>
         </div>
     </nav>
-    
-    <center>
-        <h3 class="mt-4">Medical Info and Patient Records for Dr. <?php echo $doctor_name; ?></h3>
+
+    <div class="container mt-5">
+        <h3 class="text-center">Medical Info and Patient Records for Dr. <?php echo $doctor_name; ?></h3>
         <table class="table table-striped mt-4">
             <thead>
                 <tr>
@@ -134,8 +115,8 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
                         <td>' . $diagnosis . '</td>
                         <td>' . $treatment . '</td>
                         <td>
-                            <a href="d_update.php?id=' . $app_id . '" class="btn btn-warning btn-sm">Update</a> 
-                            <a href="d_delete.php?id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="d_update.php?app_id=' . $app_id . '&patient_name=' . urlencode($patient_name) . '" class="btn btn-warning btn-sm">Update</a> 
+                            <a href="d_delete.php?app_id=' . $app_id . '" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>';
                 }
@@ -145,7 +126,6 @@ if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
             ?>
             </tbody>
         </table>
-    </center>
-
+    </div>
 </body>
 </html>

@@ -1,3 +1,41 @@
+<?php
+// Ensure no whitespace or newline before the opening PHP tag
+
+include 'connect.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $dob = $_POST['dob'];
+    $address = $_POST['address'];
+    $phone_number = $_POST['phone_number'];
+    $med_history = $_POST['med_history'];
+    $insurance_details = $_POST['insurance_details'];
+    $role = $_POST['role'];
+
+    // Insert into user table
+    $sql_user = "INSERT INTO user (username, password, role) VALUES ('$username', '$password', '$role')";
+    $run_user = mysqli_query($conn, $sql_user);
+
+    if ($run_user) {
+        // Insert into patients table
+        $sql_patient = "INSERT INTO patients (username, name, dob, address, phone_number, med_history, insurance_details) VALUES ('$username', '$name', '$dob', '$address', '$phone_number', '$med_history', '$insurance_details')";
+        $run_patient = mysqli_query($conn, $sql_patient);
+
+        if ($run_patient) {
+            // Redirect to viewpatients.php before any HTML is sent
+            header("Location: viewpatients.php");
+            exit(); // Exit after header redirection
+        } else {
+            echo "Error: Could not insert into patients table. " . mysqli_error($conn);
+        }
+    } else {
+        echo "Error: Could not insert into users table. " . mysqli_error($conn);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,43 +141,6 @@
             </div>
             <center><input type="submit" value="Register"></center>
         </form>
-
-        <?php
-        include 'connect.php';
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $name = $_POST['name'];
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $dob = $_POST['dob'];
-            $address = $_POST['address'];
-            $phone_number = $_POST['phone_number'];
-            $med_history = $_POST['med_history'];
-            $insurance_details = $_POST['insurance_details'];
-            $role = $_POST['role'];
-
-
-
-            
-            $sql_user = "INSERT INTO user (username, password, role) VALUES ('$username', '$password', '$role')";
-            $run_user = mysqli_query($conn, $sql_user);
-
-            
-            if ($run_user) {
-                $sql_patient = "INSERT INTO patients (username, name, dob, address, phone_number, med_history, insurance_details) VALUES ('$username', '$name', '$dob', '$address', '$phone_number', '$med_history', '$insurance_details')";
-                $run_patient = mysqli_query($conn, $sql_patient);
-
-                if ($run_patient) {
-                    header("Location:viewpatients.php");
-                    exit();
-                } else {
-                    echo "Error: Could not insert into patients table. " . mysqli_error($conn);
-                }
-            } else {
-                echo "Error: Could not insert into users table. " . mysqli_error($conn);
-            }
-        }
-        ?>
     </div>
 </div>
 

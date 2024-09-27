@@ -1,5 +1,22 @@
 <?php
 include 'connect.php';
+session_start();
+
+// Assuming the logged-in doctor's username is stored in the session
+$doctor_username = trim($_SESSION['doctor_name']);
+
+// Fetch the doctor's name from the doctors table using the username
+$doctor_query = "SELECT name FROM doctors WHERE username = '$doctor_username'";
+$doctor_result = mysqli_query($conn, $doctor_query);
+
+// Check if the doctor exists in the doctors table
+if ($doctor_result && mysqli_num_rows($doctor_result) > 0) {
+    $doctor_row = mysqli_fetch_assoc($doctor_result);
+    $doctor_name = $doctor_row['name']; // Get the doctor's name
+} else {
+    echo "Doctor not found for username: $doctor_username.";
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -11,7 +28,7 @@ include 'connect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         table {
             width: 100%;
@@ -76,6 +93,7 @@ include 'connect.php';
     </nav>
     
     <center>
+        <h3 class="mt-4">Medical Info and Patient Records for Dr. <?php echo $doctor_name; ?></h3>
         <table class="table table-striped mt-4">
             <thead>
                 <tr>
@@ -90,10 +108,11 @@ include 'connect.php';
             </thead>
             <tbody>
             <?php
-            // SQL query to join medical_info and patient_records tables using patient_name
+            // SQL query to join medical_info and patient_records tables using patient_name and filter by doctor name
             $sql = "SELECT mi.med_id, mi.patient_name, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
                     FROM medical_info mi
-                    LEFT JOIN patient_records pr ON mi.patient_name = pr.patient_name";  // Using patient_name as the foreign key
+                    LEFT JOIN patient_records pr ON mi.patient_name = pr.patient_name
+                    WHERE mi.patient_name IN (SELECT DISTINCT patient_name FROM appointments WHERE doc_name = '$doctor_name')"; // Filter patients by the logged-in doctor
 
             $result = mysqli_query($conn, $sql);
             if ($result) {
@@ -120,7 +139,7 @@ include 'connect.php';
                     </tr>';
                 }
             } else {
-                echo "<tr><td colspan='7'>No records found.</td></tr>";
+                echo "<tr><td colspan='7'>No records found for Dr. $doctor_name.</td></tr>";
             }
             ?>
             </tbody>

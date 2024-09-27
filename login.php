@@ -92,7 +92,7 @@ session_start(); // Start the session
 
 <div class="container">
     <div class="login-container">
-        <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+        <h2><i class="fas fa-sign-in-alt"></i> Login </h2>
         <form action="login.php" method="POST">
             <div class="form-group">
                 <label for="username"><i class="fas fa-user"></i> Username</label>
@@ -112,9 +112,8 @@ session_start(); // Start the session
                     <option value="5">Admin</option>
                 </select>
             </div>
-            <input type="submit" value="Login" class="btn btn-custom">
+            <center><input type="submit" value="Login" class="btn btn-custom"></center>
         </form>
-        <p>Need an account? <a href="register.php">Register here</a></p>
 
         <?php
         // Include database connection

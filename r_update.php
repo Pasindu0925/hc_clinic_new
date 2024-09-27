@@ -56,12 +56,11 @@
 
     // Update the appointment when form is submitted
     if (isset($_POST['submit'])) {
-        $patient_name = $_POST['patient_name'];
         $doc_name = $_POST['doc_name'];
         $date = $_POST['date'];
         $time = $_POST['time'];
 
-        $sql = "UPDATE appointments SET patient_name='$patient_name', doc_name='$doc_name', date='$date', time='$time' WHERE app_id='$app_id'";
+        $sql = "UPDATE appointments SET doc_name='$doc_name', date='$date', time='$time' WHERE app_id='$app_id'";
         $run = mysqli_query($conn, $sql);
         if ($run) {
             header("Location: appointment.php");
@@ -76,19 +75,7 @@
         <form method="post" action="">
             <div class="form-group">
                 <label for="patient_name">Patient Name</label>
-                <select class="form-control" id="patient_name" name="patient_name" required>
-                    <?php
-                    // Fetch all patient names from the patients table
-                    $sql = "SELECT name FROM patients";
-                    $result = mysqli_query($conn, $sql);
-                    if ($result) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $selected = ($row['name'] == $patient_name) ? 'selected' : '';
-                            echo "<option value='" . $row['name'] . "' $selected>" . $row['name'] . "</option>";
-                        }
-                    }
-                    ?>
-                </select>
+                <input type="text" class="form-control" id="patient_name" name="patient_name" value="<?php echo $patient_name; ?>" readonly>
             </div>
             <div class="form-group">
                 <label for="doc_name">Doctor Name</label>

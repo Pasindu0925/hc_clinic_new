@@ -97,7 +97,14 @@
                     FROM appointments a 
                     JOIN patients p ON a.p_id = p.p_id";
             $result = mysqli_query($conn, $sql);
-            if ($result) {
+
+            // Check for errors in the SQL query execution
+            if (!$result) {
+                die("SQL Error: " . mysqli_error($conn));
+            }
+
+            // Display appointments
+            if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $app_id = $row['app_id'];
                     $patient_name = $row['patient_name'];

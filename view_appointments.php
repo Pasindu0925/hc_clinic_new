@@ -25,7 +25,6 @@ if (isset($_GET['complete_id'])) {
     header("Location: view_appointments.php"); // Refresh the page
     exit();
 }
-
 ?>
 
 <!doctype html>
@@ -102,57 +101,60 @@ if (isset($_GET['complete_id'])) {
     </nav>
     
     <center>
-        <table>
-            <thead>
-                <tr>
-                    <th>Appointment ID</th>
-                    <th>Patient ID</th>
-                    <th>Doctor Name</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    <th>Action</th> 
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            // SQL query to fetch appointments for the logged-in doctor
-            $sql = "SELECT * FROM appointments WHERE doc_name = '$doctor_name'";
-            $result = mysqli_query($conn, $sql);
-            if ($result && mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $app_id = $row['app_id'];
-                    $p_id = $row['p_id'];
-                    $doc_name = $row['doc_name'];
-                    $date = $row['date'];
-                    $time = $row['time'];
-                    $status = $row['status'];
-
-                    echo '
+        <div class="container mt-4">
+            <h2 class="text-center">View Appointments</h2>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>' . $app_id . '</td>
-                        <td>' . $p_id . '</td>
-                        <td>' . $doc_name . '</td>
-                        <td>' . $date . '</td>
-                        <td>' . $time . '</td>
-                        <td>' . $status . '</td>
-                        <td>';
-                    
-                    if ($status == 'Ongoing') {
-                        echo '<a href="view_appointments.php?complete_id=' . $app_id . '">Mark as Completed</a>';
-                    } else {
-                        echo 'Completed';
-                    }
+                        <th>Appointment ID</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                // SQL query to fetch appointments for the logged-in doctor
+                $sql = "SELECT app_id, patient_name, doc_name, date, time, status FROM appointments WHERE doc_name = '$doctor_name'";
+                $result = mysqli_query($conn, $sql);
+                if ($result && mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $app_id = $row['app_id'];
+                        $patient_name = $row['patient_name']; // Use patient_name instead of p_id
+                        $doc_name = $row['doc_name'];
+                        $date = $row['date'];
+                        $time = $row['time'];
+                        $status = $row['status'];
 
-                    echo '</td>
-                    </tr>';
+                        echo '
+                        <tr>
+                            <td>' . $app_id . '</td>
+                            <td>' . $patient_name . '</td> <!-- Display patient_name -->
+                            <td>' . $doc_name . '</td>
+                            <td>' . $date . '</td>
+                            <td>' . $time . '</td>
+                            <td>' . $status . '</td>
+                            <td>';
+                        
+                        if ($status == 'Ongoing') {
+                            echo '<a href="view_appointments.php?complete_id=' . $app_id . '" class="btn btn-warning btn-sm">Mark as Completed</a>';
+                        } else {
+                            echo 'Completed';
+                        }
+
+                        echo '</td>
+                        </tr>';
+                    }
+                } else {
+                    echo "<tr><td colspan='7'>No appointments found for $doctor_name.</td></tr>";
                 }
-            } else {
-                echo "<tr><td colspan='7'>No appointments found for $doctor_name.</td></tr>";
-            }
-            ?>
-            </tbody>
-        </table>
+                ?>
+                </tbody>
+            </table>
+        </div>
     </center>
 
 </body>

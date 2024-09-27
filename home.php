@@ -8,63 +8,79 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-image: url('https://images.unsplash.com/photo-1579154202453-eefe7b3ddedc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: linear-gradient(115deg, #1d1e22, #323a45);
             height: 100vh;
-            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         .home-container {
             text-align: center;
-            margin-top: 180px;
-            background: rgba(0, 0, 0, 0.6);
             padding: 50px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: all 0.3s ease;
+        }
+        .home-container:hover {
+            border: 2px solid rgba(255, 255, 255, 0.4);
         }
         h1 {
-            font-size: 50px;
+            font-size: 60px;
             font-weight: bold;
             color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+            margin-bottom: 20px;
         }
         p {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 30px;
-            color: #ffffff;
+            color: #c7c7c7;
+        }
+        .btn-custom, .btn-secondary {
+            font-size: 18px;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
         }
         .btn-custom {
-            background-color: #28a745;
+            background: #28a745;
             color: white;
-            font-size: 18px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            text-decoration: none;
+            box-shadow: 0 0 20px #28a745, 0 0 30px #28a745, 0 0 40px #28a745;
         }
         .btn-custom:hover {
-            background-color: #218838;
-            text-decoration: none;
+            background: #218838;
+            box-shadow: 0 0 30px #218838, 0 0 40px #218838, 0 0 50px #218838;
         }
         .btn-secondary {
-            background-color: #007bff;
+            background: #007bff;
+            color: white;
+            box-shadow: 0 0 20px #007bff, 0 0 30px #007bff, 0 0 40px #007bff;
         }
         .btn-secondary:hover {
-            background-color: #0056b3;
+            background: #0056b3;
+            box-shadow: 0 0 30px #0056b3, 0 0 40px #0056b3, 0 0 50px #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <div class="home-container">
-        <h1>Welcome to HC_Clinic</h1>
-        <p>Your health and well-being are our top priority.</p>
-        <a href="login.php" class="btn btn-custom"><i class="fas fa-sign-in-alt"></i> Login</a>
-        <a href="adminpage.php" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Register</a>
-    </div>
+<div class="home-container">
+    <h1>Welcome to HC_Clinic</h1>
+    <p>Your health and well-being are our top priority.</p>
+    <a href="login.php" class="btn btn-custom"><i class="fas fa-sign-in-alt"></i> Login</a>
+    <a href="adminpage.php" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Register</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

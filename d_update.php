@@ -1,30 +1,33 @@
 <?php
 include 'connect.php';
+session_start();
 
 // Initialize variables
-$med_id = '';  // Medical Info ID
-$p_id = '';    // Patient ID
+$app_id = '';  // Appointment ID
+$patient_name = '';  // Patient Name
 $diagnosis = '';  // Diagnosis
 $treatment = '';  // Treatment
 $vitals = '';  // Vitals from patient_records
 $notes = '';   // Notes from patient_records
 
-if (isset($_GET['id'])) {
-    $med_id = $_GET['id'];
+if (isset($_GET['app_id'])) {
+    $app_id = $_GET['app_id'];
 
-    // Fetch record details from the database
-    $sql = "SELECT mi.med_id, mi.p_id, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
-            FROM medical_info mi 
-            LEFT JOIN patient_records pr ON mi.p_id = pr.p_id 
-            WHERE mi.med_id = '$med_id'";
+    // Fetch record details from the database using app_id
+    $sql = "SELECT a.patient_name, mi.diagnosis, mi.treatment, pr.vitals, pr.notes 
+            FROM appointments a
+            LEFT JOIN patient_records pr ON a.patient_name = pr.patient_name
+            LEFT JOIN medical_info mi ON a.patient_name = mi.patient_name
+            WHERE a.app_id = '$app_id'";
     
     $result = mysqli_query($conn, $sql);
     if ($result) {
         $record = mysqli_fetch_assoc($result);
-        $p_id = $record['p_id'];
-        $diagnosis = $record['diagnosis'];
-        $treatment = $record['treatment'];
-        
+        $patient_name = $record['patient_name'];
+        $diagnosis = isset($record['diagnosis']) ? $record['diagnosis'] : '';
+        $treatment = isset($record['treatment']) ? $record['treatment'] : '';
+        $vitals = isset($record['vitals']) ? $record['vitals'] : 'N/A';
+        $notes = isset($record['notes']) ? $record['notes'] : 'N/A';
     }
 }
 
@@ -32,16 +35,23 @@ if (isset($_GET['id'])) {
 if (isset($_POST['submit'])) {
     $diagnosis = $_POST['diagnosis'];
     $treatment = $_POST['treatment'];
-    
 
-    // Update medical_info table
-    $sql_update_medical_info = "UPDATE medical_info SET diagnosis='$diagnosis', treatment='$treatment' WHERE med_id='$med_id'";
+    // Update medical_info table or insert new record if it doesn't exist
+    $check_query = "SELECT * FROM medical_info WHERE patient_name='$patient_name'";
+    $check_result = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        $sql_update_medical_info = "UPDATE medical_info SET diagnosis='$diagnosis', treatment='$treatment' WHERE patient_name='$patient_name'";
+    } else {
+        $sql_update_medical_info = "INSERT INTO medical_info (patient_name, diagnosis, treatment) VALUES ('$patient_name', '$diagnosis', '$treatment')";
+    }
+
     $run_medical_info = mysqli_query($conn, $sql_update_medical_info);
 
-    
-
-    if ($run_medical_info ) {
+    if ($run_medical_info) {
+        $_SESSION['message'] = "Updated medical information for patient: $patient_name (Appointment ID: $app_id)";
         header("Location: medinfo.php");  // Redirect to the records page after successful update
+        exit();
     } else {
         echo "Please check your query.";
     }
@@ -52,19 +62,14 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 <head>
     <title>Update Medical Information</title>
-    <!--  meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 
 <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: black;">
     <a class="navbar-brand" href="dochome.php">HC_Clinic</a>
-    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-        aria-expanded="false" aria-label="Toggle navigation"></button>
     <div class="collapse navbar-collapse" id="collapsibleNavId">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
@@ -78,6 +83,10 @@ if (isset($_POST['submit'])) {
     <h2>Update Medical Information</h2>
     <form method="POST">
         <div class="form-group">
+            <label for="patient_name">Patient Name</label>
+            <input type="text" class="form-control" id="patient_name" name="patient_name" value="<?php echo $patient_name; ?>" readonly>
+        </div>
+        <div class="form-group">
             <label for="diagnosis">Diagnosis</label>
             <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required><?php echo $diagnosis; ?></textarea>
         </div>
@@ -85,7 +94,14 @@ if (isset($_POST['submit'])) {
             <label for="treatment">Treatment</label>
             <textarea class="form-control" id="treatment" name="treatment" rows="3" required><?php echo $treatment; ?></textarea>
         </div>
-        
+        <div class="form-group">
+            <label for="vitals">Vitals</label>
+            <textarea class="form-control" id="vitals" name="vitals" rows="3" readonly><?php echo $vitals; ?></textarea>
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea class="form-control" id="notes" name="notes" rows="3" readonly><?php echo $notes; ?></textarea>
+        </div>
         <button type="submit" name="submit" class="btn btn-primary">Update</button>
     </form>
 </div>

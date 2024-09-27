@@ -7,103 +7,32 @@ session_start(); // Start the session
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - HC_Clinic</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #1e90ff, #00c9ff);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
-            background-image: url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDIwfHxoZWFsdGh8ZW58MHx8fHwxNjMyMDAxNjc2&ixlib=rb-1.2.1&q=80&w=1080');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            overflow: hidden;
+            background-color: #f8f9fa;
         }
         .login-container {
-            max-width: 500px;
-            padding: 50px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
-        .login-container:hover {
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-        h2 {
+        .login-container h2 {
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 35px;
-            color: #ffffff;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .form-group label {
-            font-weight: 500;
-            font-size: 16px;
-            color: #ffffff;
-        }
-        .form-control {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 15px;
-            color: #ffffff;
-            border-radius: 30px;
-            margin-bottom: 20px;
-        }
-        .form-control::placeholder {
-            color: #ffffff;
-        }
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.4);
-            border: none;
-            outline: none;
+            margin-bottom: 30px;
+            color: #343a40;
         }
         .btn-custom {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
-            font-size: 18px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-            width: 100%;
         }
         .btn-custom:hover {
-            background-color: #218838;
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
-        }
-        .btn-custom:focus {
-            outline: none;
-        }
-        .login-container i {
-            margin-right: 10px;
-        }
-        .login-container p {
-            font-size: 16px;
-            color: #ffffff;
-            margin-top: 20px;
-        }
-        .login-container a {
-            color: #00c9ff;
-            text-decoration: none;
-        }
-        .login-container a:hover {
-            text-decoration: underline;
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -131,7 +60,7 @@ session_start(); // Start the session
                     <option value="5">Admin</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-custom"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <center><input type="submit" value="Login" class="btn btn-custom"></center>
         </form>
 
         <?php
@@ -196,18 +125,11 @@ session_start(); // Start the session
         }
         ?>
 
-        <div class="text-center mt-3">
-<<<<<<< HEAD
-            <p>Don't have an account? <a href="adminpage.php">Register here.</a></p>
-=======
-            <p><a href="adminpage.php" style="color: #ffffff;">Don't have an account? Register here.</a></p>
->>>>>>> 67563f3621022117d9b82dddcf92da47f78d9202
-        </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-include 'connect.php';
+session_start(); // Start the session
 ?>
 
 <!DOCTYPE html>
@@ -14,32 +14,6 @@ include 'connect.php';
         body {
             background-color: #f8f9fa;
         }
-        .container-home, .container-login {
-            display: none; /* Hide all containers by default */
-        }
-        .container-home.active, .container-login.active {
-            display: block; /* Show the active container */
-        }
-        .home-container {
-            text-align: center;
-            margin-top: 150px;
-        }
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-            font-size: 18px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-        .btn-custom:hover {
-            background-color: #0056b3;
-            text-decoration: none;
-            color: white;
-        }
         .login-container {
             max-width: 400px;
             margin: 80px auto;
@@ -53,19 +27,18 @@ include 'connect.php';
             margin-bottom: 30px;
             color: #343a40;
         }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 
-<div class="container container-home active">
-    <div class="home-container">
-        <h1>Welcome to HC_Clinic</h1>
-        <p>Your health is our priority.</p>
-        <button id="loginButton" class="btn btn-custom">Login</button>
-    </div>
-</div>
-
-<div class="container container-login">
+<div class="container">
     <div class="login-container">
         <h2><i class="fas fa-sign-in-alt"></i> Login </h2>
         <form action="login.php" method="POST">
@@ -154,13 +127,6 @@ include 'connect.php';
 
     </div>
 </div>
-
-<script>
-    document.getElementById('loginButton').addEventListener('click', function() {
-        document.querySelector('.container-home').classList.remove('active');
-        document.querySelector('.container-login').classList.add('active');
-    });
-</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
